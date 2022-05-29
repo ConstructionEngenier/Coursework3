@@ -44,8 +44,10 @@ class UsersService(BaseService):
     def update_pass(self, data):
         user_pass_1 = data.get("password_1")
         user_pass_2 = data.get("password_2")
-        user_id = data.get("id")
-        user = self.get_one(user_id)
+        user_email = data.get("email")
+        user = UserDAO(self._db_session).get_by_email(user_email)
+        data['id'] = user.id
+        user = self.get_one(user.id)
         if not user or not compare_passwords(user["password"], user_pass_1):
             raise ItemNotFound
         data["password"] = generate_password_digest(user_pass_2)

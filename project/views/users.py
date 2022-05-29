@@ -52,10 +52,10 @@ class UserView(Resource):
         req_json = request.json
         if not req_json:
             abort(400, message="Bad request")
-        if not req_json.get("password_1") or req_json.get("password_2"):
+        if not req_json.get("password_1") or not req_json.get("password_2"):
             abort(400, message="Bad request")
-        if not req_json.get("id"):
-            req_json["id"] = uid
+        if not req_json.get("email"):
+            abort(400, message="Bad request")
         try:
             return UsersService(db.session).update_pass(req_json)
         except ItemNotFound:
